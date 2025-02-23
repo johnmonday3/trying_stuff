@@ -4,23 +4,182 @@
   <meta charset="UTF-8">
   <title>Vehicle Location & Status</title>
   <style>
-    /* Increase overall font size by 100% */
-    body { 
-      font-family: Arial, sans-serif; 
-      padding: 20px; 
-      font-size: 200%; 
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, button, select, textarea { margin-top: 10px; display: block; width: 100%; max-width: 400px; }
+    .section { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>Share Your Vehicle Location & Status</h1>
+  <p id="status">Fetching your current location...</p>
+
+  <!-- Basic Information -->
+  <div class="section">
+    <label for="userName">Your Name:</label>
+    <input type="text" id="userName" name="userName" placeholder="Enter your name" required>
+  </div>
+
+  <!-- Onsite (within 1000 yards) fields -->
+  <div id="onsiteFields" class="section hidden">
+    <h3>Onsite Questions</h3>
+    <label for="timeAway">How long away from Barnesville?</label>
+    <input type="text" id="timeAway" name="timeAway" placeholder="e.g., 5 minutes">
+
+    <label for="preTrip">Pre-Trip Inspection Complete?</label>
+    <select id="preTrip" name="preTrip">
+      <option value="">Select an option</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+
+    <label for="mileageHours">Current Mileage/Hours?</label>
+    <input type="text" id="mileageHours" name="mileageHours" placeholder="Enter mileage or hours">
+
+    <label for="serviceNeeds">Current Known Service Needs?</label>
+    <textarea id="serviceNeeds" name="serviceNeeds" placeholder="Describe any service needs"></textarea>
+
+    <label for="otherNotesOnsite">Other Notes?</label>
+    <textarea id="otherNotesOnsite" name="otherNotesOnsite" placeholder="Any additional information"></textarea>
+  </div>
+
+  <!-- Offsite (more than 1000 yards) fields -->
+  <div id="offsiteFields" class="section hidden">
+    <h3>Offsite Questions</h3>
+    <label for="reasonOffsite">Reason for storing vehicle/equipment offsite?</label>
+    <textarea id="reasonOffsite" name="reasonOffsite" placeholder="Enter reason"></textarea>
+
+    <label for="disabledSecured">Is vehicle disabled/equipment secured?</label>
+    <select id="disabledSecured" name="disabledSecured">
+      <option value="">Select an option</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+
+    <label for="returnInfo">When/Why will this vehicle return to Barnesville?</label>
+    <textarea id="returnInfo" name="returnInfo" placeholder="Enter details"></textarea>
+  </div>
+
+  <!-- Send SMS Button -->
+  <button type="button" id="sendSMS" class="hidden">Send Location via SMS</button>
+
+  <script>
+    // Reference point (Barnesville)
+    const refLat = 33.06581343657786;
+    const refLon = -84.16806324265086;
+    const thresholdYards = 1000; // threshold distance in yards
+
+    // Utility: Haversine formula to calculate distance between two lat/lon points
+    // Returns distance in yards
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371e3; // Earth's radius in meters
+      const toRadians = (deg) => deg * (Math.PI / 180);
+      const φ1 = toRadians(lat1);
+      const φ2 = toRadians(lat2);
+      const Δφ = toRadians(lat2 - lat1);
+      const Δλ = toRadians(lon2 - lon1);
+
+      const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                Math.cos(φ1) * Math.cos(φ2) *
+                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distanceMeters = R * c;
+      const metersToYards = 1.09361;
+      return distanceMeters * metersToYards;
     }
-    input, button, select, textarea { 
-      margin-top: 10px; 
-      display: block; 
-      width: 100%; 
-      max-width: 400px; 
-      font-size: 0.5em; /* adjust controls relative to body */
+
+    // Utility to get URL query parameters
+    function getQueryParams() {
+      const params = {};
+      window.location.search.substring(1).split('&').forEach(param => {
+        let [key, value] = param.split('=');
+        if (key) {
+          params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+        }
+      });
+      return params;
     }
-    .section { 
-      margin-top: 20px; 
-      padding: 10px; 
-      border: 1px solid #ccc; 
+
+    const queryParams = getQueryParams();
+    // Get vehicle identifier from URL, default to "Unknown" if not provided
+    const vehicleID = queryParams.vehicle || "Unknown";
+
+    let currentLatitude = null;
+    let currentLongitude = null;
+    let distanceYards = null;
+
+    // Function to build and send the SMS message
+    function sendSMS() {
+      // Construct the Google Maps URL for the current location
+      const mapsUrl = `https://maps.google.com/?q=${currentLatitude},${currentLongitude}`;
+
+      // Collect basic info
+      const name = document.getElementById('userName').value.trim();
+
+      // Start building the message
+      let message = `Name: ${name}\nVehicle: ${vehicleID}\nLocation: ${mapsUrl}\n`;
+
+      // Append answers based on whether onsite or offsite
+      if (distanceYards < thresholdYards) {
+        // Onsite fields
+        const timeAway = document.getElementById('timeAway').value.trim();
+        const preTrip = document.getElementById('preTrip').value;
+        const mileageHours = document.getElementById('mileageHours').value.trim();
+        const serviceNeeds = document.getElementById('serviceNeeds').value.trim();
+        const otherNotes = document.getElementById('otherNotesOnsite').value.trim();
+
+        message += `How long away from Barnesville: ${timeAway}\n`;
+        message += `Pre-Trip Inspection Complete: ${preTrip}\n`;
+        message += `Current Mileage/Hours: ${mileageHours}\n`;
+        message += `Current Known Service Needs: ${serviceNeeds}\n`;
+        message += `Other Notes: ${otherNotes}\n`;
+      } else {
+        // Offsite fields
+        const reasonOffsite = document.getElementById('reasonOffsite').value.trim();
+        const disabledSecured = document.getElementById('disabledSecured').value;
+        const returnInfo = document.getElementById('returnInfo').value.trim();
+
+        message += `Reason for storing vehicle/equipment offsite: ${reasonOffsite}\n`;
+        message += `Is vehicle disabled/equipment secured: ${disabledSecured}\n`;
+        message += `When/Why will this vehicle return to Barnesville: ${returnInfo}\n`;
+      }
+
+      // Open the SMS app with the prefilled message
+      const smsUri = `sms:?body=${encodeURIComponent(message)}`;
+      window.location.href = smsUri;
     }
-    .hidden { 
-      displ
+
+    // Request geolocation and update the page accordingly
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          currentLatitude = position.coords.latitude;
+          currentLongitude = position.coords.longitude;
+          // Calculate distance from Barnesville in yards
+          distanceYards = calculateDistance(currentLatitude, currentLongitude, refLat, refLon);
+          
+          const statusEl = document.getElementById('status');
+          statusEl.textContent = `Location acquired: (${currentLatitude.toFixed(4)}, ${currentLongitude.toFixed(4)}) for Vehicle ${vehicleID}. Distance from Barnesville: ${Math.round(distanceYards)} yards.`;
+          
+          // Show the appropriate section of the form based on distance
+          if (distanceYards < thresholdYards) {
+            document.getElementById('onsiteFields').classList.remove('hidden');
+          } else {
+            document.getElementById('offsiteFields').classList.remove('hidden');
+          }
+          // Now that location is acquired and form is updated, show the send button
+          document.getElementById('sendSMS').classList.remove('hidden');
+          document.getElementById('sendSMS').addEventListener('click', sendSMS);
+        },
+        (error) => {
+          document.getElementById('status').textContent =
+            'Unable to retrieve your location. Please ensure location services are enabled.';
+        }
+      );
+    } else {
+      document.getElementById('status').textContent =
+        'Geolocation is not supported by your browser.';
+    }
+  </script>
+</body>
+</html>
