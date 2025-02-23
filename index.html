@@ -5,7 +5,7 @@
   <title>Vehicle Location & Status</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 40px; }
-    input, button, select, textarea { margin-top: 20px; display: block; width: 100%; max-width: 400px; }
+    input, button, select, textarea { margin-top: 40px; display: block; width: 100%; max-width: 400px; }
     .section { margin-top: 40px; padding: 20px; border: 2px solid #ccc; }
     .hidden { display: none; }
   </style>
@@ -108,7 +108,7 @@
       const mapsUrl = `https://maps.google.com/?q=${currentLatitude},${currentLongitude}`;
 
       // Start building the message
-      let message = `Name: ${name}\nVehicle: ${vehicleID}\nLocation: ${mapsUrl}\n`;
+      let message = `Vehicle: ${vehicleID}\nLocation: ${mapsUrl}\n`;
 
       // Append answers based on whether onsite or offsite
       if (distanceYards < thresholdYards) {
