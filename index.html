@@ -11,18 +11,18 @@
       font-size: 200%; 
     }
 
-    /* Add spacing to each form element */
+    /* Add spacing above labels, and bigger spacing below inputs */
     label {
       display: block;
-      margin-top: 1em;
-      margin-bottom: 2em;
+      margin-top: 1em;      /* space above label */
+      margin-bottom: 0.5em; /* space between label and input */
     }
     input, select, textarea {
-      margin-bottom: 2em; /* extra space below inputs */
       display: block;
       width: 100%;
       max-width: 400px;
       font-size: 0.5em;
+      margin-bottom: 2em;   /* increase space below inputs */
     }
 
     .section { 
@@ -83,119 +83,4 @@
   <button type="button" id="sendSMS" class="hidden">Send Location via SMS</button>
 
   <script>
-    // Reference point (Barnesville)
-    const refLat = 33.06581343657786;
-    const refLon = -84.16806324265086;
-    const thresholdYards = 1000; // threshold distance in yards
-
-    // Utility: Haversine formula to calculate distance between two lat/lon points
-    // Returns distance in yards
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371e3; // Earth's radius in meters
-      const toRadians = (deg) => deg * (Math.PI / 180);
-      const φ1 = toRadians(lat1);
-      const φ2 = toRadians(lat2);
-      const Δφ = toRadians(lat2 - lat1);
-      const Δλ = toRadians(lon2 - lon1);
-
-      const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const distanceMeters = R * c;
-      const metersToYards = 1.09361;
-      return distanceMeters * metersToYards;
-    }
-
-    // Utility to get URL query parameters
-    function getQueryParams() {
-      const params = {};
-      window.location.search.substring(1).split('&').forEach(param => {
-        let [key, value] = param.split('=');
-        if (key) {
-          params[decodeURIComponent(key)] = decodeURIComponent(value || '');
-        }
-      });
-      return params;
-    }
-
-    const queryParams = getQueryParams();
-    // Get vehicle identifier from URL, default to "Unknown" if not provided
-    const vehicleID = queryParams.vehicle || "Unknown";
-
-    let currentLatitude = null;
-    let currentLongitude = null;
-    let distanceYards = null;
-
-    // Function to build and send the SMS message
-    function sendSMS() {
-      // Construct the Google Maps URL for the current location
-      const mapsUrl = `https://maps.google.com/?q=${currentLatitude},${currentLongitude}`;
-
-      // Start building the message
-      let message = `Vehicle: ${vehicleID}\nLocation: ${mapsUrl}\n`;
-
-      // Append answers based on whether onsite or offsite
-      if (distanceYards < thresholdYards) {
-        // Onsite fields
-        const timeAway = document.getElementById('timeAway').value.trim();
-        const preTrip = document.getElementById('preTrip').value;
-        const mileageHours = document.getElementById('mileageHours').value.trim();
-        const serviceNeeds = document.getElementById('serviceNeeds').value.trim();
-        const otherNotes = document.getElementById('otherNotesOnsite').value.trim();
-
-        message += `How long away from Barnesville: ${timeAway}\n`;
-        message += `Pre-Trip Inspection Complete: ${preTrip}\n`;
-        message += `Current Mileage/Hours: ${mileageHours}\n`;
-        message += `Current Known Service Needs: ${serviceNeeds}\n`;
-        message += `Other Notes: ${otherNotes}\n`;
-      } else {
-        // Offsite fields
-        const reasonOffsite = document.getElementById('reasonOffsite').value.trim();
-        const disabledSecured = document.getElementById('disabledSecured').value;
-        const returnInfo = document.getElementById('returnInfo').value.trim();
-
-        message += `Reason for storing vehicle/equipment offsite: ${reasonOffsite}\n`;
-        message += `Is vehicle disabled/equipment secured: ${disabledSecured}\n`;
-        message += `When/Why will this vehicle return to Barnesville: ${returnInfo}\n`;
-      }
-
-      // Open the SMS app with the prefilled message
-      const smsUri = `sms:?body=${encodeURIComponent(message)}`;
-      window.location.href = smsUri;
-    }
-
-    // Request geolocation and update the page accordingly
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          currentLatitude = position.coords.latitude;
-          currentLongitude = position.coords.longitude;
-          // Calculate distance from Barnesville in yards
-          distanceYards = calculateDistance(currentLatitude, currentLongitude, refLat, refLon);
-          
-          const statusEl = document.getElementById('status');
-          statusEl.textContent = `Location acquired: (${currentLatitude.toFixed(4)}, ${currentLongitude.toFixed(4)}) for Vehicle ${vehicleID}. Distance from Barnesville: ${Math.round(distanceYards)} yards.`;
-          
-          // Show the appropriate section of the form based on distance
-          if (distanceYards < thresholdYards) {
-            document.getElementById('onsiteFields').classList.remove('hidden');
-          } else {
-            document.getElementById('offsiteFields').classList.remove('hidden');
-          }
-          // Now that location is acquired and form is updated, show the send button
-          document.getElementById('sendSMS').classList.remove('hidden');
-          document.getElementById('sendSMS').addEventListener('click', sendSMS);
-        },
-        (error) => {
-          document.getElementById('status').textContent =
-            'Unable to retrieve your location. Please ensure location services are enabled.';
-        }
-      );
-    } else {
-      document.getElementById('status').textContent =
-        'Geolocation is not supported by your browser.';
-    }
-  </script>
-</body>
-</html>
+    // R
