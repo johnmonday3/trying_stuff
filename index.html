@@ -107,9 +107,6 @@
       // Construct the Google Maps URL for the current location
       const mapsUrl = `https://maps.google.com/?q=${currentLatitude},${currentLongitude}`;
 
-      // Collect basic info
-      const name = document.getElementById('userName').value.trim();
-
       // Start building the message
       let message = `Name: ${name}\nVehicle: ${vehicleID}\nLocation: ${mapsUrl}\n`;
 
