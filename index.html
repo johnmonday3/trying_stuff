@@ -4,14 +4,39 @@
   <meta charset="UTF-8">
   <title>Vehicle Location & Status</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 40px; }
-    input, button, select, textarea { margin-top: 40px; display: block; width: 100%; max-width: 400px; }
-    .section { margin-top: 40px; padding: 40px; border: 2px solid #ccc; margin-bottom: 40px}
-    .hidden { display: none; }
+    /* Increase overall font size */
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 20px; 
+      font-size: 200%; 
+    }
+
+    /* Add spacing to each form element */
+    label {
+      display: block;
+      margin-top: 1em;
+      margin-bottom: 0.5em;
+    }
+    input, select, textarea {
+      margin-bottom: 1em; /* extra space below inputs */
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      font-size: 0.5em;
+    }
+
+    .section { 
+      margin-top: 20px; 
+      padding: 10px; 
+      border: 1px solid #ccc; 
+    }
+    .hidden { 
+      display: none; 
+    }
   </style>
 </head>
 <body>
-  <h1>Share Your Vehicle Location & Status</h1>
+  <h1>Share Your Vehicle Location &amp; Status</h1>
   <p id="status">Fetching your current location...</p>
 
   <!-- Onsite (within 1000 yards) fields -->
