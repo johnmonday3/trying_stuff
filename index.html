@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <title>Vehicle Location & Status</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    input, button, select, textarea { margin-top: 10px; display: block; width: 100%; max-width: 400px; }
-    .section { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
-    .hidden { display: none; }
-  </style>
-</head>
-<body>
-  <h1>Share Your Vehicle Location & Status</h1>
-  <p id="status">Fetching your current location...</p>
-
-  <!-- Onsite (within 1000 yards) fields -->
-  <div id="onsiteFields" class="section hidden">
-    <h3>Onsite Questions</h3>
-    <label for="timeAway">How long away from Barnesville?</label>
-    <input type="text" id="timeAway" name="timeAway" placeholder="e.g., 5 minutes">
-
-    <label for="preTrip">Pre-Trip Inspection Complete?</label>
-    <select id="preTrip" name="preTrip">
-      <option value=
+    /* Increase overall font size by 100% */
+    body { 
+      font-family: Arial, sans-serif; 
+      padding: 20px; 
+      font-size: 200%; 
+    }
+    input, button, select, textarea { 
+      margin-top: 10px; 
+      display: block; 
+      width: 100%; 
+      max-width: 400px; 
+      font-size: 0.5em; /* adjust controls relative to body */
+    }
+    .section { 
+      margin-top: 20px; 
+      padding: 10px; 
+      border: 1px solid #ccc; 
+    }
+    .hidden { 
+      displ
