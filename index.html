@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Share Your Current Location</title>
+</head>
+<body>
+  <h1>Share Your Current Location</h1>
+  <p id="status">Fetching your current location...</p>
+  <button id="sendSMS" style="display:none;">Send Location via SMS</button>
+
+  <script>
+    // Function to generate SMS URI and open the SMS app
+    function sendSMS(latitude, longitude) {
+      // Create a Google Maps URL with the current location
+      const mapsUrl = `https://maps.google.com/?q=${latitude},${longitude}`;
+      // Create a prefilled SMS message (adjust phone number if needed)
+      const smsUri = `sms:?body=Here%20is%20my%20current%20location:%20${encodeURIComponent(mapsUrl)}`;
+      // Open the SMS app
+      window.location.href = smsUri;
+    }
+
+    // Try to get the current location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          document.getElementById('status').textContent =
+            `Location acquired: (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`;
+          // Show the button now that location is available
+          const btn = document.getElementById('sendSMS');
+          btn.style.display = 'inline';
+          btn.addEventListener('click', () => sendSMS(latitude, longitude));
+        },
+        (error) => {
+          document.getElementById('status').textContent =
+            'Unable to retrieve your location. Please ensure location services are enabled.';
+        }
+      );
+    } else {
+      document.getElementById('status').textContent =
+        'Geolocation is not supported by your browser.';
+    }
+  </script>
+</body>
+</html>
