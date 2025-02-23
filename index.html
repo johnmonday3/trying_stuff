@@ -4,35 +4,36 @@
   <meta charset="UTF-8">
   <title>Vehicle Location & Status</title>
   <style>
-    /* Increase overall font size */
     body { 
       font-family: Arial, sans-serif; 
       padding: 20px; 
       font-size: 200%; 
     }
 
-    /* Add spacing above labels, and bigger spacing below inputs */
+    .section { 
+      margin-top: 20px; 
+      padding: 10px; 
+      border: 1px solid #ccc; 
+    }
+    .hidden { 
+      display: none; 
+    }
+
+    /* Each label + input (or select/textarea) is wrapped in a .form-group */
+    .form-group {
+      margin-bottom: 3em; /* Increase space below each question/answer pair */
+    }
+
     label {
       display: block;
-      margin-top: 2em;      /* space above label */
-      margin-bottom: 2em; /* space between label and input */
+      margin-bottom: 0.5em; /* space between label and input */
     }
+
     input, select, textarea {
       display: block;
       width: 100%;
       max-width: 400px;
       font-size: 0.5em;
-      margin-bottom: 2em;   /* increase space below inputs */
-    }
-
-    .section { 
-      margin-top: 20px; 
-      padding: 10px; 
-      border: 1px solid #ccc;
-      margin-bottom: 40px;
-    }
-    .hidden { 
-      display: none; 
     }
   </style>
 </head>
@@ -43,45 +44,39 @@
   <!-- Onsite (within 1000 yards) fields -->
   <div id="onsiteFields" class="section hidden">
     <h3>Onsite Questions</h3>
-    <label for="timeAway">How long away from Barnesville?</label>
-    <input type="text" id="timeAway" name="timeAway" placeholder="e.g., 5 minutes">
+    
+    <div class="form-group">
+      <label for="timeAway">How long away from Barnesville?</label>
+      <input type="text" id="timeAway" name="timeAway" placeholder="e.g., 5 minutes">
+    </div>
 
-    <label for="preTrip">Pre-Trip Inspection Complete?</label>
-    <select id="preTrip" name="preTrip">
-      <option value="">Select an option</option>
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
+    <div class="form-group">
+      <label for="preTrip">Pre-Trip Inspection Complete?</label>
+      <select id="preTrip" name="preTrip">
+        <option value="">Select an option</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+      </select>
+    </div>
 
-    <label for="mileageHours">Current Mileage/Hours?</label>
-    <input type="text" id="mileageHours" name="mileageHours" placeholder="Enter mileage or hours">
+    <div class="form-group">
+      <label for="mileageHours">Current Mileage/Hours?</label>
+      <input type="text" id="mileageHours" name="mileageHours" placeholder="Enter mileage or hours">
+    </div>
 
-    <label for="serviceNeeds">Current Known Service Needs?</label>
-    <textarea id="serviceNeeds" name="serviceNeeds" placeholder="Describe any service needs"></textarea>
+    <div class="form-group">
+      <label for="serviceNeeds">Current Known Service Needs?</label>
+      <textarea id="serviceNeeds" name="serviceNeeds" placeholder="Describe any service needs"></textarea>
+    </div>
 
-    <label for="otherNotesOnsite">Other Notes?</label>
-    <textarea id="otherNotesOnsite" name="otherNotesOnsite" placeholder="Any additional information"></textarea>
+    <div class="form-group">
+      <label for="otherNotesOnsite">Other Notes?</label>
+      <textarea id="otherNotesOnsite" name="otherNotesOnsite" placeholder="Any additional information"></textarea>
+    </div>
   </div>
 
   <!-- Offsite (more than 1000 yards) fields -->
   <div id="offsiteFields" class="section hidden">
     <h3>Offsite Questions</h3>
-    <label for="reasonOffsite">Reason for storing vehicle/equipment offsite?</label>
-    <textarea id="reasonOffsite" name="reasonOffsite" placeholder="Enter reason"></textarea>
 
-    <label for="disabledSecured">Is vehicle disabled/equipment secured?</label>
-    <select id="disabledSecured" name="disabledSecured">
-      <option value="">Select an option</option>
-      <option value="Yes">Yes</option>
-      <option value="No">No</option>
-    </select>
-
-    <label for="returnInfo">When/Why will this vehicle return to Barnesville?</label>
-    <textarea id="returnInfo" name="returnInfo" placeholder="Enter details"></textarea>
-  </div>
-
-  <!-- Send SMS Button -->
-  <button type="button" id="sendSMS" class="hidden">Send Location via SMS</button>
-
-  <script>
-    // R
+    <div c
