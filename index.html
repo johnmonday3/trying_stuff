@@ -1,32 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Specifies the character encoding and basic HTML metadata -->
+  <!-- Set character encoding -->
   <meta charset="UTF-8">
+  <!-- Viewport meta tag ensures proper scaling on mobile devices -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vehicle Location & Status</title>
-
   <style>
-    /* 
-      Base styling for the entire page:
-      - Sets font family
-      - Adds padding around the content
-      - Increases the default font size
-    */
+    /* Base styling for the page */
     body { 
       font-family: Arial, sans-serif; 
       padding: 20px; 
       font-size: 200%; 
     }
-
-    /* 
-      A container that holds related questions/answers.
-      Adding top/bottom padding and a border for clarity.
-    */
+    /* Styling for each section container */
     .section { 
       margin-top: 20px;   /* Space above each section */
-      padding: 10px;      /* Space inside the section */
+      padding: 10px;      /* Padding inside the section */
       border: 1px solid #ccc; /* Light border around section */
     }
+    /* Utility class to hide elements until needed */
+    .hidden { 
+      display: none; 
+    }
+    /* Form group wrapper for consistent spacing between each question/answer pair */
+    .form-group {
+      margin-bottom: 2em; /* Increase this value for more space */
+    }
+    /* Label styling with spacing between label and control */
+    label {
+      display: block;       
+      margin-bottom: 0.5em; /* Space between label text and the form control */
+    }
+    /* Form control styling */
+    input, select, textarea {
+      display: block;        
+      width: 100%;            
+      max-width: 400px;       
+      font-size: 0.5em;       /* Adjusted to scale with the 200% body font size */
+    }
+  </style>
+</head>
+<body>
+  <!-- Main heading -->
+  <h1>Share Your Vehicle Location &amp; Status</h1>
 
-    /*
-      A ut
+  <!-- Debugging output: status m
